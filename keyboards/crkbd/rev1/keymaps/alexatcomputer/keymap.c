@@ -77,3 +77,37 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
   [3] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU), ENCODER_CCW_CW(KC_MPRV, KC_MNXT), ENCODER_CCW_CW(RM_VALD, RM_VALU), ENCODER_CCW_CW(KC_RGHT, KC_LEFT), },
 };
 #endif
+
+#ifdef OLED_ENABLE
+oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+    return OLED_ROTATION_270;
+}
+
+bool oled_task_user(void) {
+    oled_write_P(PSTR("L:\n"), false);
+
+    switch (get_highest_layer(layer_state)) {
+        case 0:
+            oled_write_ln_P(PSTR("BASE"), false);
+            break;
+        case 1:
+            oled_write_ln_P(PSTR("NUM"), false);
+            break;
+        case 2:
+            oled_write_ln_P(PSTR("SYMB"), false);
+            break;
+        case 3:
+            oled_write_ln_P(PSTR("CNFG"), false);
+            break;
+        default:
+            oled_write_ln_P(PSTR("UNDEF"), false);
+    }
+
+    led_t led_state = host_keyboard_led_state();
+    oled_write_P(led_state.num_lock ? PSTR("\nNUM ") : PSTR("    "), false);
+    oled_write_P(led_state.caps_lock ? PSTR("\nCAP ") : PSTR("    "), false);
+    oled_write_P(led_state.scroll_lock ? PSTR("\nSCR ") : PSTR("    "), false);
+
+    return false;
+}
+#endif
