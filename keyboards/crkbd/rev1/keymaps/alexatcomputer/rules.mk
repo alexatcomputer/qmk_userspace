@@ -1,1 +1,2 @@
 CONVERT_TO=elite_pi
+SPLIT_KEYBOARD = yes
